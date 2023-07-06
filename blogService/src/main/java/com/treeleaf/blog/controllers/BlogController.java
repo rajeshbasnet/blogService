@@ -46,4 +46,9 @@ public class BlogController {
         return ResponseEntity.ok(new BlogResponse(Util.BLOG_DELETED));
     }
 
+    @GetMapping("/rating")
+    public List<Blog> getUserBlogRating() {
+        return blogService.getUserBlogRating();
+    }
+
 }

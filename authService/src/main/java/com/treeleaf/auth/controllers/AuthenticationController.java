@@ -19,11 +19,6 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @GetMapping("/validate")
-    public boolean validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return authenticationService.isTokenValid(token);
-    }
-
     @PostMapping("/auth")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
         AuthResponse authResponse = authenticationService.authenticate(request);

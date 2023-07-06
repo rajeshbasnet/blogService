@@ -49,8 +49,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
             if (authHeaderOptional.isPresent()) {
                 String token = retrieveToken(authHeaderOptional);
-                boolean isValid = isTokenValidHttpRequest(token);
-                log.info("Token Valid Status: {}", isValid);
+                boolean isValid = jwtUtil.validateToken(token);
+                log.info("Token valid status: {}", isValid);
+
 
                 if (isValid) {
                     Map<String, Object> claims = jwtUtil.parseClaims(token);
@@ -81,15 +82,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         return authHeader.filter(header -> header.startsWith("Bearer"))
                 .map(auth -> auth.replace("Bearer", "").trim())
                 .orElseThrow(() -> new InvalidTokenException(Util.INVALID_TOKEN));
-    }
-
-    private boolean isTokenValidHttpRequest(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        return Boolean.TRUE.equals(restTemplate.
-                exchange("http://localhost:8082/user/validate", HttpMethod.GET, entity, boolean.class).getBody());
     }
 
     public static class Config {

@@ -39,8 +39,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JWTUtil jwtUtil;
 
-    private final UserDetailsService userDetailsService;
-
     @Override
     public void registerUser(User user) {
         if (checkIfUserExists(user.getEmail())) {
@@ -62,24 +60,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String token = generateToken(authentication);
         return new AuthResponse(token);
-    }
-
-    @Override
-    public boolean isTokenValid(String bearerToken) {
-        String token = getToken(bearerToken);
-        return parseAndValidateToken(token);
-    }
-
-    private boolean parseAndValidateToken(String token) {
-        Map<String, Object> claims = jwtUtil.parseClaims(token);
-        CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(claims.get(Claims.SUBJECT).toString());
-        return jwtUtil.validateToken(token, userDetails);
-    }
-
-    private String getToken(String token) {
-        return Optional.of(token)
-                .map(authToken -> authToken.replace("Bearer", "").trim())
-                .get();
     }
 
     private boolean checkIfUserExists(String email) {

@@ -8,6 +8,4 @@ public interface AuthenticationService {
     void registerUser(User user);
 
     AuthResponse authenticate(AuthRequest authRequest);
-
-    boolean isTokenValid(String token);
 }

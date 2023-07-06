@@ -16,4 +16,6 @@ public interface BlogService {
     void updateBlog(String blogId, Blog blog);
 
     void deleteBlog(String blogId);
+
+    List<Blog> getUserBlogRating();
 }
