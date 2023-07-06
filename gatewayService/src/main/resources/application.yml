@@ -22,6 +22,14 @@ spring:
             - Path=/blog/**
           filters:
             - AuthenticationFilter
+
+        - id: RATING-SERVICE
+          uri: lb://RATING-SERVICE:8083
+          predicates:
+            - Path=/rating/**
+          filters:
+            - AuthenticationFilter
+
   application:
     name: GATEWAY-SERVICE
 

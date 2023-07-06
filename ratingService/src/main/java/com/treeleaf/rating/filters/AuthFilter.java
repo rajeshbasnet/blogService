@@ -1,4 +1,4 @@
-package com.treeleaf.blog.filters;
+package com.treeleaf.rating.filters;
 
 
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,10 @@ public class AuthFilter extends OncePerRequestFilter {
         log.info("Filtering request, {} with HttpMethod, {}", request.getRequestURI(), request.getMethod());
 
         Optional<String> id = Optional.ofNullable(request.getHeader("id"));
+        Optional<String> username = Optional.ofNullable(request.getHeader("username"));
         Optional<String> role = Optional.ofNullable(request.getHeader("role"));
 
-        if (id.isPresent() && role.isPresent()) {
+        if (id.isPresent() && username.isPresent() && role.isPresent()) {
             SecurityContextHolder.getContext().setAuthentication(createAuthentication(id.get(), role.get()));
             filterChain.doFilter(request, response);
         } else {

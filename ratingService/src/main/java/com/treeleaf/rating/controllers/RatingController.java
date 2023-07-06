@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rating")
@@ -17,8 +18,9 @@ public class RatingController {
     private final RatingService ratingService;
 
     @PostMapping("/{blogId}")
-    public void addRating(@PathVariable String blogId, @RequestBody Rating rating) {
+    public ResponseEntity<Map<String, String>> addRating(@PathVariable String blogId, @RequestBody Rating rating) {
         ratingService.addRating(blogId, rating);
+        return ResponseEntity.ok(Map.of("message", "Rating added successfully"));
     }
 
     @GetMapping("/user/{blogId}")

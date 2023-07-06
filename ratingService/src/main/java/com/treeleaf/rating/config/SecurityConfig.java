@@ -1,9 +1,8 @@
-package com.treeleaf.blog.config;
+package com.treeleaf.rating.config;
 
 
-import com.treeleaf.blog.filters.AuthFilter;
-import com.treeleaf.blog.filters.FilterExceptionHandler;
-import lombok.RequiredArgsConstructor;
+import com.treeleaf.rating.filters.AuthFilter;
+import com.treeleaf.rating.filters.FilterExceptionHandler;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +15,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @Log4j2
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Autowired
