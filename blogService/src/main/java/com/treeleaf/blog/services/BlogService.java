@@ -6,13 +6,14 @@ import com.treeleaf.blog.dto.Blog;
 import java.util.List;
 
 public interface BlogService {
-    public void addBlog(Blog blog);
 
-    public Blog getBlog(String blogId);
+    List<Blog> getBlog();
 
-    public List<Blog> getBlogList();
+    void addBlog(Blog blog);
 
-    void updateBlog(String id, Blog blog);
+    List<Blog> getBlogList();
 
-    void deleteBlog(String id);
+    void updateBlog(String blogId, Blog blog);
+
+    void deleteBlog(String blogId);
 }

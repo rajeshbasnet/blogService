@@ -19,20 +19,20 @@ public class BlogDaoImpl implements BlogDao {
 
 
     @Override
-    public void addBlog(Blog blog) {
+    public void addBlog(String userId, Blog blog) {
         jdbcTemplate.update("" +
-                        "INSERT INTO blog (id, title, content) VALUES (?, ?, ?)",
-                blog.getId(), blog.getTitle(), blog.getContent());
+                        "INSERT INTO blog (id, title, content, userId) VALUES (?, ?, ?, ?)",
+                blog.getId(), blog.getTitle(), blog.getContent(), userId);
     }
 
     @Override
-    public Blog getBlog(String blogId) {
-        Blog blog = jdbcTemplate.queryForObject(
-                "SELECT * FROM blog WHERE id = ?", new Object[]{blogId},
+    public List<Blog> getBlog(String userId) {
+        List<Blog> blog = jdbcTemplate.query(
+                "SELECT * FROM blog WHERE userId = ?", new Object[]{userId},
                 new BeanPropertyRowMapper<>(Blog.class));
-        log.debug("Fetched blog with id: {} from database", blog.getId());
         return blog;
     }
+
 
     @Override
     public List<Blog> getBlogList() {
@@ -43,16 +43,16 @@ public class BlogDaoImpl implements BlogDao {
 
 
     @Override
-    public void updateBlog(String id, Blog blog) {
+    public void updateBlog(String userId, Blog blog) {
         jdbcTemplate.update("" +
-                        "UPDATE blog SET title = ?, content = ? WHERE id = ?",
-                blog.getTitle(), blog.getContent(), id);
+                        "UPDATE blog SET title = ?, content = ? WHERE id = ? AND userId = ?",
+                blog.getTitle(), blog.getContent(), blog.getId(), userId);
     }
 
 
     @Override
-    public void deleteBlog(String id) {
-        jdbcTemplate.update("DELETE from blog WHERE id = ?", id);
+    public void deleteBlog(String userId, String blogId) {
+        jdbcTemplate.update("DELETE from blog WHERE id = ? AND userId = ?", blogId, userId);
     }
 
 }

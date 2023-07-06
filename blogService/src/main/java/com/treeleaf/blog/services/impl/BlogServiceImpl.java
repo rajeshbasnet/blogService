@@ -2,6 +2,7 @@ package com.treeleaf.blog.services.impl;
 
 import com.treeleaf.blog.config.IsAdmin;
 import com.treeleaf.blog.config.IsUser;
+import com.treeleaf.blog.config.SessionManager;
 import com.treeleaf.blog.dao.BlogDao;
 import com.treeleaf.blog.dto.Blog;
 import com.treeleaf.blog.services.BlogService;
@@ -17,18 +18,22 @@ public class BlogServiceImpl implements BlogService {
 
     private final BlogDao blogDao;
 
+    private final SessionManager sessionManager;
+
     @IsUser
     @Override
-    public Blog getBlog(String blogId) {
-        return blogDao.getBlog(blogId);
+    public List<Blog> getBlog() {
+        String userId = sessionManager.getCurrentUserId();
+        return blogDao.getBlog(userId);
     }
 
     @IsUser
     @Override
     public void addBlog(Blog blog) {
+        String userId = sessionManager.getCurrentUserId();
         String blogId = UUID.randomUUID().toString();
         blog.setId(blogId);
-        blogDao.addBlog(blog);
+        blogDao.addBlog(userId, blog);
     }
 
     @IsAdmin
@@ -39,13 +44,16 @@ public class BlogServiceImpl implements BlogService {
 
     @IsUser
     @Override
-    public void updateBlog(String id, Blog blog) {
-        blogDao.updateBlog(id, blog);
+    public void updateBlog(String blogId, Blog blog) {
+        blog.setId(blogId);
+        String userId = sessionManager.getCurrentUserId();
+        blogDao.updateBlog(userId, blog);
     }
 
     @IsUser
     @Override
-    public void deleteBlog(String id) {
-        blogDao.deleteBlog(id);
+    public void deleteBlog(String blogId) {
+        String userId = sessionManager.getCurrentUserId();
+        blogDao.deleteBlog(userId, blogId);
     }
 }

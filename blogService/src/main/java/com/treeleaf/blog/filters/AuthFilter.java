@@ -35,7 +35,7 @@ public class AuthFilter extends OncePerRequestFilter {
         Optional<String> role = Optional.ofNullable(request.getHeader("role"));
 
         if (id.isPresent() && username.isPresent() && role.isPresent()) {
-            SecurityContextHolder.getContext().setAuthentication(createAuthentication(username.get(), role.get()));
+            SecurityContextHolder.getContext().setAuthentication(createAuthentication(id.get(), role.get()));
             filterChain.doFilter(request, response);
         } else {
             log.warn("Incoming request with missing authorization header, Fiter action : false");
@@ -43,8 +43,8 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private Authentication createAuthentication(String username, String role) {
-        return new UsernamePasswordAuthenticationToken(username, null, getAuthorities(role));
+    private Authentication createAuthentication(String id, String role) {
+        return new UsernamePasswordAuthenticationToken(id, null, getAuthorities(role));
     }
 
     private List<GrantedAuthority> getAuthorities(String role) {

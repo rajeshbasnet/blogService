@@ -5,13 +5,14 @@ import com.treeleaf.blog.dto.Blog;
 import java.util.List;
 
 public interface BlogDao {
-    public void addBlog(Blog blog);
 
-    public Blog getBlog(String blogId);
+    void addBlog(String userId, Blog blog);
 
-    public List<Blog> getBlogList();
+    List<Blog> getBlog(String userId);
 
-    void updateBlog(String id, Blog blog);
+    List<Blog> getBlogList();
 
-    void deleteBlog(String id);
+    void updateBlog(String userId, Blog blog);
+
+    void deleteBlog(String userId, String blogId);
 }

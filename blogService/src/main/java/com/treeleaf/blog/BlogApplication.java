@@ -21,7 +21,12 @@ public class BlogApplication {
                 CREATE TABLE IF NOT EXISTS BLOG (
                     id VARCHAR(50) PRIMARY KEY,
                     title VARCHAR(50),
-                    content VARCHAR(255)
+                    content VARCHAR(255),
+                    userId VARCHAR(50),
+                    CONSTRAINT fk_user FOREIGN KEY (userId)
+                    REFERENCES user (id)
+                    on delete cascade
+                    on update cascade
                 )""");
 	}
 

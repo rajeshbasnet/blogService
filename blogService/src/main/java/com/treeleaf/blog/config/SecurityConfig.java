@@ -2,6 +2,7 @@ package com.treeleaf.blog.config;
 
 
 import com.treeleaf.blog.filters.AuthFilter;
+import com.treeleaf.blog.filters.FilterExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,10 @@ public class SecurityConfig {
     @Autowired
     @Lazy
     private AuthFilter authFilter;
+
+    @Autowired
+    @Lazy
+    private FilterExceptionHandler filterExceptionHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
