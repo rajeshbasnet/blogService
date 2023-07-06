@@ -11,12 +11,14 @@
         <module name="serviceRegistry" />
         <module name="authService" />
         <module name="gatewayService" />
+        <module name="ratingService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="authService" target="20" />
       <module name="blogService" target="20" />
       <module name="gatewayService" target="17" />
+      <module name="ratingService" target="20" />
       <module name="serviceRegistry" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -25,6 +27,7 @@
       <module name="authService" options="-parameters" />
       <module name="blogService" options="-parameters" />
       <module name="gatewayService" options="-parameters" />
+      <module name="ratingService" options="-parameters" />
       <module name="serviceRegistry" options="-parameters" />
     </option>
   </component>
