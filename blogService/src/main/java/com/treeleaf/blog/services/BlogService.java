@@ -1,7 +1,9 @@
 package com.treeleaf.blog.services;
 
 
+import com.treeleaf.blog.config.IsUser;
 import com.treeleaf.blog.dto.Blog;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -17,5 +19,5 @@ public interface BlogService {
 
     void deleteBlog(String blogId);
 
-    List<Blog> getUserBlogRating();
+    Flux<Blog> getUserBlogRating();
 }

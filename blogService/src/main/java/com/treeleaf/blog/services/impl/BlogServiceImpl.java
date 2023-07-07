@@ -9,15 +9,16 @@ import com.treeleaf.blog.dto.Blog;
 import com.treeleaf.blog.dto.Rating;
 import com.treeleaf.blog.services.BlogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BlogServiceImpl implements BlogService {
 
     private final BlogDao blogDao;
@@ -25,6 +26,8 @@ public class BlogServiceImpl implements BlogService {
     private final SessionManager sessionManager;
 
     private final RatingService ratingService;
+
+    private final WebClient.Builder loadBalancedWebClientBuilder;
 
     @IsUser
     @Override
@@ -65,21 +68,32 @@ public class BlogServiceImpl implements BlogService {
 
     @IsUser
     @Override
-    public List<Blog> getUserBlogRating() {
+    public Flux<Blog> getUserBlogRating() {
+        log.info("Enter into getUserBlogRating. BlogServiceImpl");
         String userId = sessionManager.getCurrentUserId();
         String role = sessionManager.getUserRole();
         Map<String, String> headers = Map.of("id", userId, "role", role);
 
         List<Blog> blogs = blogDao.getBlog(userId);
 
-        return blogs.parallelStream()
-                .map(this::updateBlog)
-                .collect(Collectors.toList());
+        return Flux.just(blogs)
+                .flatMap(Flux::fromIterable)
+                .flatMap(blog -> loadBalancedWebClientBuilder.build()
+                        .get().uri("http://RATING-SERVICE/rating/" + blog.getId())
+                        .exchangeToFlux(clientResponse -> clientResponse.bodyToFlux(Rating.class))
+                        .flatMap(ratingItem -> Flux.just(new Blog(blog.getId(), blog.getTitle(), blog.getContent(), ratingItem))));
     }
 
-    private Blog updateBlog(Blog blog) {
-        List<Rating> ratings = ratingService.getBlogRating(blog.getId());
-        blog.setRating(ratings);
-        return blog;
+    private Flux<Rating[]> getBlogRating(Blog blog) {
+        Flux<Rating[]> ratingFlux = loadBalancedWebClientBuilder.build()
+                .get().uri("http://RATING-SERVICE/rating/" + blog.getId())
+                .exchangeToFlux(clientResponse -> clientResponse.bodyToFlux(Rating[].class));
+        return ratingFlux;
     }
+
+//    private Blog updateBlog(Blog blog) {
+//        List<Rating> ratings = ratingService.getBlogRating(blog.getId());
+//        blog.setRating(ratings);
+//        return blog;
+//    }
 }

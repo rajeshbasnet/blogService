@@ -57,18 +57,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(response);
     }
 
-    private ResponseEntity<Map<String, String>> handleBeanValidationException(MethodArgumentNotValidException exception, HttpStatus status) {
-        log.warn("{}, {}", exception.getClass(), exception.getMessage());
-
-        return ResponseEntity.status(status).body(
-                exception.getFieldErrors()
-                        .stream()
-                        .collect(Collectors
-                                .toMap(FieldError::getField, Objects.requireNonNull(FieldError::getDefaultMessage),
-                                        (existing, replacement) -> replacement))
-        );
-    }
-
     private ResponseEntity<Map<String, String>> handleInternalServerError(Exception exception) {
         log.error("Exception occurred", exception);
 

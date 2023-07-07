@@ -8,6 +8,7 @@ import com.treeleaf.blog.services.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class BlogController {
     }
 
     @GetMapping("/rating")
-    public List<Blog> getUserBlogRating() {
+    public Flux<Blog> getUserBlogRating() {
         return blogService.getUserBlogRating();
     }
 
